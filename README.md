@@ -19,62 +19,8 @@ L'évaluation des compétences techniques lors du recrutement traditionnel souff
 
 La plateforme repose sur l'interaction synchrone et asynchrone de micro-services conteneurisés. Le flux de données, de l'importation du profil jusqu'au rapport final de performance, est schématisé ci-dessous :
 
-```mermaid
-graph TD
-    %% Styling
-    classDef agent fill:#ffebfa,stroke:#d63384,stroke-width:2px;
-    classDef db fill:#e8f0fe,stroke:#1a73e8,stroke-width:2px;
-    classDef service fill:#e6f4ea,stroke:#137333,stroke-width:2px;
-    classDef client fill:#fce8e6,stroke:#c5221f,stroke-width:2px;
-    
-    %% Nodes
-    A[Candidat / Recruteur] -->|Upload CV PDF| B(Next.js Frontend):::client
-    B -->|Transmission du fichier| C[FastAPI Backend]:::service
-    C -->|Persistance SQL| Postgres[(PostgreSQL)]:::db
-    
-    %% Agent 1
-    C -->|Texte Extrait du CV| Ag1[Agent 1: Profile Analyzer]:::agent
-    Ag1 -->|Calibration & Skills| JobProfile[JobProfile JSON]
-    
-    %% Agent 2 & 3 (Planning)
-    JobProfile --> Ag2[Agent 2: Interview Planner]:::agent
-    Ag2 -->|Session Plan Provisoire| Ag3[Agent 3: Orchestrator]:::agent
-    
-    %% RAG & Qdrant
-    Qdrant[(Qdrant Vector DB)]:::db
-    Ag3 <-->|Recherche Sémantique & Level Matching| Qdrant
-    Ag3 -->|Session Plan Enrichi RAG| SessionPlan[SessionPlan Final]
-    
-    %% WebSocket Live Session
-    SessionPlan --> LiveInterviewer[Agent 4: Stateful Live Interviewer]:::agent
-    B <-->|WebSocket Stream Audio & Texte| LiveInterviewer
-    
-    %% Multimodal Pipeline
-    LiveInterviewer <-->|Audio PCM Chunks| AudioBuffer[Audio Buffer Service]:::service
-    AudioBuffer -->|Format WAV| WhisperService[Faster-Whisper Server]:::service
-    WhisperService -->|Transcription Texte| LiveInterviewer
-    
-    LiveInterviewer -->|Texte Réponse LLM| TTSService[Coqui YourTTS Server]:::service
-    TTSService -->|WAV Audio Stream| B
-    
-    %% Evaluator & Database
-    LiveInterviewer -->|Sauvegarde Turn| Postgres
-    LiveInterviewer -->|Signal Asynchrone| Celery[Celery Async Workers]:::service
-    Celery -->|Evaluation Pipeline| Ag5[Agent 5: Evaluator]:::agent
-    Ag5 <-->|Calcul de Similarité Cosinus| Qdrant
-    Ag5 -->|Score & Feedback Unitaire| Postgres
-    
-    %% Report
-    Postgres -->|Clôture Entretien| Ag6[Agent 6: Report Generator]:::agent
-    Ag6 -->|Agrégation & Plan de Progrès| ReportPDF[Rapport PDF d'Évaluation]
-    ReportPDF -->|Upload Objet S3| Minio[(MinIO Object Storage)]:::db
-    ReportPDF -->|Téléchargement| B
-    
-    class Ag1,Ag2,Ag3,LiveInterviewer,Ag5,Ag6 agent;
-    class Postgres,Qdrant,Minio db;
-    class Celery,WhisperService,TTSService,AudioBuffer service;
-    class B client;
-```
+![Uploading architecture.png…]()
+
 
 ---
 
