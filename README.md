@@ -19,7 +19,9 @@ L'évaluation des compétences techniques lors du recrutement traditionnel souff
 
 La plateforme repose sur l'interaction synchrone et asynchrone de micro-services conteneurisés. Le flux de données, de l'importation du profil jusqu'au rapport final de performance, est schématisé ci-dessous :
 
-![Uploading architecture.png…]()
+<img width="1536" height="1024" alt="architecture" src="https://github.com/user-attachments/assets/d001361c-f810-4d40-bf35-5e40aebdee3b" />
+
+
 
 
 ---
